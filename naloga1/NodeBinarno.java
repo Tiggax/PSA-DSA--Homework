@@ -59,71 +59,68 @@ public class NodeBinarno {
 			return true;
 		}
 	}
-
 	public boolean delete(NodeBinarno node){
-		int compared = compare(node);
-		if (compared > 0) {
+		if (this.compare(node) < 0) {
+			if (this.levi == null) {
+				return false;
+			} else {
+				if (this.levi.compare(node) == 0 && this.levi.levi == null && this.levi.desni == null) { //delete if no children
+					this.levi = null;
+					return true;
+				}else if(this.levi.compare(node) == 0) {
+					if(this.levi.levi != null){
+						int tmp = getMax(this.desni);
+						this.delete(new NodeBinarno(tmp));
+						this.levi.key = tmp;
+					}else if(this.levi.desni != null){
+						int tmp = getMin(this.desni);
+						this.delete(new NodeBinarno(tmp));
+						this.levi.key = tmp;
+					}else{
+						return true;
+					}
+				}else{
+					return (this.levi).delete(node);
+				}
+			}
+		} else if (this.compare(node) > 0) {
 			if (this.desni == null) {
 				return false;
-			}else{
-				return this.desni.delete(node);
-			}
-		} else if (compared < 0) {
-			if (this.levi == null) {
-				return false;
 			} else {
-				return this.levi.delete(node);
+				if(this.desni.compare(node) == 0 && this.desni.levi == null && this.desni.desni == null){
+					this.desni = null;
+					return true;
+				}else if(this.desni.compare(node) == 0) {
+					if(this.desni.levi != null){
+						int tmp = getMax(this.desni);
+						this.delete(new NodeBinarno(tmp));
+						this.desni.key = tmp;
+					}else if(this.desni.desni != null){
+						int tmp = getMin(this.desni);
+						this.delete(new NodeBinarno(tmp));
+						this.desni.key = tmp;
+					}else{
+						return true;
+					}
+				}else{
+					return (this.desni).delete(node);
+				}
 			}
-		}else{
-			if (this.levi == null && this.desni == null) {
-				//TODO
-			}
-			if (this.levi == null) {
-				this.key = getMin().getKey();
-				delMin();
-			} else if (this.desni == null) {
-				this.key = getMax().getKey();
-				delMax();
-			}
+		} return false;
+	}
 
-
-
-			if (this.levi == null && this.desni == null) {
-				this.key = ;
-				return true;
-			} else {
-				
-			}
+	public int getMin (NodeBinarno node){
+		if (node.desni == null) {
+			return node.getKey();
+		} else {
+			return getMin(node.desni);
 		}
 	}
-	public NodeBinarno getMin(){
-		if (this.levi.levi == null) {
-			return this.levi;
+	public int getMax (NodeBinarno node){
+		if (node.levi == null) {
+			return node.getKey();
 		} else {
-			return levi.getMin();
-		}
-	}
-	public boolean delMin(){
-		if (this.levi.levi == null) {
-			this.levi = null;
-			return true;
-		} else {
-			return levi.delMin();
-		}
-	}
-	public NodeBinarno getMax(){
-		if (this.desni.desni == null) {
-			return this.desni;
-		} else {
-			return desni.getMax();
-		}
-	}
-	public boolean delMax(){
-		if (this.desni.desni == null) {
-			this.desni = null;
-			return true;
-		} else {
-			return desni.delMax();
+			return getMax(node.levi);
 		}
 	}
 
